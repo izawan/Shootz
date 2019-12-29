@@ -1,0 +1,50 @@
+var Discord = require("discord.js");
+//var logger = require(‘winston’);
+var config = require("./config.json");
+
+/*
+// Configure logger settings
+logger.remove(logger.transports.Console);
+logger.add(new logger.transports.Console, { colorize: true });
+logger.level = ‘debug’;
+*/
+
+// Initialize Discord client
+var client = new Discord.Client();
+
+//Commands
+
+
+//Date stuff
+var options = {year: 'numeric', month: 'long', day: 'numeric' };
+var today  = new Date();
+
+client.on("ready", () => {
+  console.log("I am ready!");
+});
+
+client.on("message", (message) => {
+	
+	const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
+	const command = args.shift().toLowerCase();
+	
+	switch (command)
+	{
+		case "serge":
+			message.channel.send("Serge has been banned two times as of " + today.toLocaleDateString("en-US", options) + ".");
+			break;
+		case "roll":
+			let max = args[0];
+			if (max < 1)
+			{
+				message.channel.send("Please pick a number greater than 0.");
+			}
+			var num = Math.floor(Math.random() * (max - 1)) + 1;
+			message.channel.send("Rolling a " + max + "-sided dice, and rolled a " + num + "!");
+			break;
+		default:
+			break;
+	}
+});
+
+client.login(config.token);

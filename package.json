@@ -1,0 +1,15 @@
+{
+  "name": "Shootz",
+  "version": "1.0.0",
+  "description": "Aloha Discord bot",
+  "main": "bot.js",
+  "author": "Nick Izawa",
+  "dependencies": {
+    "discord.io": "^2.5.3",
+    "discord.js": "^11.3.2",
+    "moment": "^2.24.0",
+    "sqlite": "^2.9.2",
+    "winston": "^3.0.0",
+    "xmlhttprequest": "^1.8.0"
+  }
+}

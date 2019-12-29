@@ -1,0 +1,8 @@
+{
+“name”: “greeter-bot”,
+“version”: “1.0.0”,
+“description”: “To satisfy my gambling addiction”,
+“main”: “bot.js”,
+“author”: “Nick Izawa”,
+“dependencies”: {}
+}

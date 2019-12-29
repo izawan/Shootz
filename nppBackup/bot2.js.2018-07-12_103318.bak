@@ -1,0 +1,27 @@
+const Discord = require("discord.io");
+//var logger = require(‘winston’);
+var config = require("./config.json");
+const client = new Discord.Client();
+
+/*
+// Configure logger settings
+logger.remove(logger.transports.Console);
+logger.add(new logger.transports.Console, { colorize: true });
+logger.level = ‘debug’;
+*/
+
+client.on("ready", () => {
+  console.log("I am ready!");
+});
+
+client.on("message", (message) => {
+	
+	//exit if no prefix
+	if (!message.content.startsWith(config.prefix) || message.author.client) return;
+	
+	if (message.content.startsWith(config.prefix + "serge")) {
+		message.channel.send("Serge has been banned two times as of " + new Date() + ".");
+	}
+});
+
+client.login(config.token);

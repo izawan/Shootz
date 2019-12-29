@@ -1,0 +1,17 @@
+var Discord = require(‘discord.io’);
+var auth = require(‘./auth.json’);
+
+// Initialize Discord Bot
+var bot = new Discord.Client({ token: auth.token, autorun: true });
+
+const prefix = "!";
+
+bot.on("message", (message) => {
+	
+	//exit if no prefix
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	
+	if (message.content.startsWith(prefix + "serge")) {
+		message.channel.send("Serge has been banned two times as of " + new Date() + ".");
+	}
+}
