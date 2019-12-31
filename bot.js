@@ -440,7 +440,7 @@ client.on("ready", () =>
 		//loop through all discords the bot is in
 		for(var guild in client.guilds)
 		{
-			let voters = guild.roles.find(r => r.name === "Voters");
+			let voters = guild.roles.find(r => r.name.includes("Voter"));
 			let voteCH = guild.channels.find(c => c.name.includes("reminders"));
 			if (voters != null && voteCH != null)
 			{
@@ -509,7 +509,7 @@ client.on("message", (message) =>
 
 		if (message.guild != null)
 		{
-			voteRole = message.guild.roles.find(r => r.name === "Voters");
+			voteRole = message.guild.roles.find(r => r.name.includes("Voter"));
 		}
 
 		switch (command)
@@ -534,7 +534,7 @@ client.on("message", (message) =>
 				"**splits _<total>_ _<people>_:** Splits the total among people, includes optimal store tax evasion etc. outputs.\n" +
 				"**aussie:** Says a random aussie phrase.\n\n" +
 
-				"*Note: You will need a text channel with the word \"reminder\" in it, and a role called \"Voter\" to use vote/shop commands.*");
+				"*Note: You will need a text channel with the word \"reminder\" in it, and a role with the word \"Voter\" to use vote/shop commands.*");
 				break;
 
 			case "prefix":
