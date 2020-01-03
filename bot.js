@@ -438,7 +438,7 @@ client.on("ready", () =>
 		today = new Date();
 
 		//loop through all discords the bot is in
-		for(var guild in client.guilds)
+		client.guilds.forEach(guild => 
 		{
 			let voters = guild.roles.find(r => r.name.includes("Voter"));
 			let voteCH = guild.channels.find(c => c.name.includes("reminders"));
@@ -474,7 +474,7 @@ client.on("ready", () =>
 					});
 				});
 			}
-		}
+		});
 	}, 60000);
 });
 
@@ -1158,10 +1158,10 @@ client.on("message", (message) =>
 				});
 				break;
 			
-			// case "drop":
-			// 	sql.run('DROP TABLE ' + args[0]);
-			// 	console.log("Dropped table " + args[0]);
-			// 	break;
+			case "drop":
+				sql.run('DROP TABLE ' + args[0]);
+				console.log("Dropped table " + args[0]);
+				break;
 			// case "add":
 			// 	sql.run("INSERT INTO prefix(guildID, pref) VALUES (\"0\", \"!\")");
 			// case "remove":
