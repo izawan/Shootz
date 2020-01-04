@@ -171,7 +171,7 @@ function getSpawnTime(bossName)
 			spawnTime = 4;
 			break;
 		case "anego":
-			spawnTime = 4;
+			spawnTime = 5;
 			break;
 		case "lilynouch":
 			spawnTime = 4;
