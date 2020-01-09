@@ -16,6 +16,12 @@ http.createServer((request, response) => {
   response.end()
 }).listen(process.env.PORT)
 
+//use watchdogs so shootz will reboot if it crashes/internet dies etc.
+setInterval(() => {
+	var args = ['--pid=' + process.pid, 'WATCHDOG=1']
+	child_process.execFile('/bin/systemd-notify', args);
+}, 60000);
+
 // Initialize Discord client
 var client = new Discord.Client();
 
