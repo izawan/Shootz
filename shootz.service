@@ -1,0 +1,13 @@
+[Unit]
+Description=Shootz Bot Service
+After=network-online.target
+ 
+[Service]
+ExecStart=/usr/local/bin/node "/home/pi/djsbots/shootz/bot.js"
+WorkingDirectory=/home/pi/djsbots/shootz
+Restart=on-failure
+User=pi
+Environment=PORT=8000
+ 
+[Install]
+WantedBy=multi-user.target

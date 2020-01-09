@@ -3,6 +3,19 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 var config = require("./config.json");
 const sql = require("sqlite");
 
+const http = require('http')
+
+console.log('Starting timestamp-service.')
+
+http.createServer((request, response) => {
+  const timeStamp = Math.floor(Date.now() / 1000)
+  
+  console.log(`Received request at ${timeStamp}.`)
+  
+  response.write(`${timeStamp}`)
+  response.end()
+}).listen(process.env.PORT)
+
 // Initialize Discord client
 var client = new Discord.Client();
 
