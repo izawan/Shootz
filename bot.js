@@ -801,7 +801,7 @@ client.on("message", (message) =>
 							else
 							{
 								// message.channel.send(boss + " will spawn in CH" + channel + " " + map + " within **" + spawnRange + "** UTC (server time).");
-								message.channel.send(boss + " will spawn in CH" + channel + " " + map + " at **" + spawnsAtLocal + "** UTC (server time).");
+								message.channel.send(boss + " will spawn in CH" + channel + " " + map + " at **" + spawnsAtLocal + "** UTC (server time)");
 							}
 
 						}).catch((e) =>
@@ -856,7 +856,7 @@ client.on("message", (message) =>
 						}
 						else 
 						{
-							message.channel.send(boss + " will spawn in CH" + channel + " at **" + spawnsAtLocal + "** UTC (server time).");
+							message.channel.send(boss + " will spawn in CH" + channel + " at **" + spawnsAtLocal + "** UTC (server time)");
 						}
 					}).catch((e) =>
 					{
@@ -887,6 +887,7 @@ client.on("message", (message) =>
 								return;
 							}
 							msg += "**__" + getFullBossName(boss) + " (" + getSpawnTime(boss) + "h)__**\n";
+							var prevMap = null;
 							rows.forEach((row) =>
 							{
 								if (row != null)
@@ -897,11 +898,19 @@ client.on("message", (message) =>
 									if (spawnsAt.getTime() < today.getTime() || row.time == 0 || row.time == null)
 									{
 										sql.run('UPDATE timers set time = 0 WHERE timerID = ' + row.timerID);
-										console.log(row.timerId + " updated.");
+										console.log(row.timerID + " updated.");
 										if (row.map != null)
 										{
 											map = getFullMapName(row.map);
-											msg += "**CH" + row.channel + " " + map + ":** up (maybe)\n";
+											// msg += "**CH" + row.channel + " " + map + ":** up (maybe)\n";
+
+											//map changed, print header
+											if (row.map != prevMap)
+											{
+												msg += "__**" + map + "**__\n";
+												prevMap = row.map;
+											}
+											msg += "**CH" + row.channel + ":** up (maybe)\n";
 										}
 										else
 										{
@@ -910,12 +919,21 @@ client.on("message", (message) =>
 									}
 									else if (row.map != null)
 									{
+										
 										map = getFullMapName(row.map);
-										msg += "**CH" + row.channel + " " + map + ":** " + spawnsAtLocal + " UTC (server time).\n";
+										// msg += "**CH" + row.channel + " " + map + ":** " + spawnsAtLocal + " UTC (server time).\n";
+
+										//map changed, print header
+										if (row.map != prevMap)
+										{
+											msg += "__**" + map + "**__\n";
+											prevMap = row.map;
+										}
+										msg += "**CH" + row.channel + ":** " + spawnsAtLocal + " UTC (server time)\n";
 									}
 									else
 									{
-										msg += "**CH" + row.channel + ":** " + spawnsAtLocal + " UTC (server time).\n";
+										msg += "**CH" + row.channel + ":** " + spawnsAtLocal + " UTC (server time)\n";
 									}
 								}
 							});
