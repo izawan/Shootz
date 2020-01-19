@@ -5,7 +5,7 @@ const sql = require("sqlite");
 
 const http = require('http')
 
-console.log('Starting timestamp-service.')
+console.log('Starting shootz-service.')
 
 http.createServer((request, response) => {
   const timeStamp = Math.floor(Date.now() / 1000)
@@ -16,11 +16,11 @@ http.createServer((request, response) => {
   response.end()
 }).listen(process.env.PORT)
 
-//use watchdogs so shootz will reboot if it crashes/internet dies etc.
-setInterval(() => {
-	var args = ['--pid=' + process.pid, 'WATCHDOG=1']
-	child_process.execFile('/bin/systemd-notify', args);
-}, 60000);
+// //use watchdogs so shootz will reboot if it crashes/internet dies etc.
+// setInterval(() => {
+// 	var args = ['--pid=' + process.pid, 'WATCHDOG=1']
+// 	child_process.execFile('/bin/systemd-notify', args);
+// }, 60000);
 
 // Initialize Discord client
 var client = new Discord.Client();
@@ -765,10 +765,10 @@ client.on("message", (message) =>
 
 						var spawnTime = getSpawnTime(boss);
 						var spawnsAt = dateAdd(today, 'hour', spawnTime);
-						var spawnMin = dateSubtract(spawnsAt, 'hour', spawnTime*0.15).toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
-						var spawnMax = dateAdd(spawnsAt, 'hour', spawnTime*0.15).toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
-		
-						var spawnRange = spawnMin + ' - ' + spawnMax;
+						var spawnsAtLocal = spawnsAt.toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
+						//var spawnMin = dateSubtract(spawnsAt, 'hour', spawnTime*0.15).toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
+						//var spawnMax = dateAdd(spawnsAt, 'hour', spawnTime*0.15).toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
+						//var spawnRange = spawnMin + ' - ' + spawnMax;
 
 						var select = 'SELECT * FROM timers WHERE channel = ' + channel + ' AND boss = \"' + boss + '\" AND map = \"' + map + '\"';
 						console.log(select);
@@ -800,7 +800,8 @@ client.on("message", (message) =>
 							}
 							else
 							{
-								message.channel.send(boss + " will spawn in CH" + channel + " " + map + " within **" + spawnRange + "** UTC (server time).");
+								// message.channel.send(boss + " will spawn in CH" + channel + " " + map + " within **" + spawnRange + "** UTC (server time).");
+								message.channel.send(boss + " will spawn in CH" + channel + " " + map + " at **" + spawnsAtLocal + "** UTC (server time).");
 							}
 
 						}).catch((e) =>
@@ -827,10 +828,10 @@ client.on("message", (message) =>
 					var channel = args[1];
 					var spawnTime = getSpawnTime(boss);
 					var spawnsAt = dateAdd(today, 'hour', spawnTime);
-					var spawnMin = dateSubtract(spawnsAt, 'hour', spawnTime*0.15).toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
-					var spawnMax = dateAdd(spawnsAt, 'hour', spawnTime*0.15).toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
-
-					var spawnRange = spawnMin + ' - ' + spawnMax;
+					var spawnsAtLocal = spawnsAt.toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
+					// var spawnMin = dateSubtract(spawnsAt, 'hour', spawnTime*0.15).toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
+					// var spawnMax = dateAdd(spawnsAt, 'hour', spawnTime*0.15).toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
+					// var spawnRange = spawnMin + ' - ' + spawnMax;
 
 					var select = 'SELECT * FROM timers WHERE channel = ' + channel + ' AND boss = \"' + boss + '\"';
 					console.log(select);
@@ -855,7 +856,7 @@ client.on("message", (message) =>
 						}
 						else 
 						{
-							message.channel.send(boss + " will spawn in CH" + channel + " within **" + spawnRange + "** UTC (server time).");
+							message.channel.send(boss + " will spawn in CH" + channel + " at **" + spawnsAtLocal + "** UTC (server time).");
 						}
 					}).catch((e) =>
 					{
@@ -890,12 +891,10 @@ client.on("message", (message) =>
 							{
 								if (row != null)
 								{
-									var spawnTime = getSpawnTime(row.boss);
-									var spawnMin = dateSubtract(row.time, 'hour', spawnTime*0.15);
-									var spawnMax = dateAdd(row.time, 'hour', spawnTime*0.15);
-									var spawnRange = spawnMin.toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'}) + ' - ' + spawnMax.toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});;
-									
-									if (spawnMax < today || row.time == 0 || row.time == null)
+									var spawnsAt = new Date(row.time);
+									var spawnsAtLocal = spawnsAt.toLocaleString("en-US", {timeZone: "UTC", weekday: 'short', hour: '2-digit', minute: '2-digit'});
+
+									if (spawnsAt.getTime() < today.getTime() || row.time == 0 || row.time == null)
 									{
 										sql.run('UPDATE timers set time = 0 WHERE timerID = ' + row.timerID);
 										console.log(row.timerId + " updated.");
@@ -912,11 +911,11 @@ client.on("message", (message) =>
 									else if (row.map != null)
 									{
 										map = getFullMapName(row.map);
-										msg += "**CH" + row.channel + " " + map + ":** " + spawnRange + " UTC (server time).\n";
+										msg += "**CH" + row.channel + " " + map + ":** " + spawnsAtLocal + " UTC (server time).\n";
 									}
 									else
 									{
-										msg += "**CH" + row.channel + ":** " + spawnRange + " UTC (server time).\n";
+										msg += "**CH" + row.channel + ":** " + spawnsAtLocal + " UTC (server time).\n";
 									}
 								}
 							});

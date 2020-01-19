@@ -8,11 +8,6 @@ WorkingDirectory=/home/pi/djsbots/shootz
 Restart=on-failure
 User=pi
 Environment=PORT=8000
-WatchdogSec=120s
-StartLimitInterval=5min
-StartLimitBurst=4
-StartLimitAction=reboot-force
-NotifyAccess=all
  
 [Install]
 WantedBy=multi-user.target
