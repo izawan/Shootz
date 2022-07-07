@@ -8,7 +8,7 @@
     "discord.io": "^2.5.3",
     "discord.js": "^11.3.2",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "sqlite": "^2.9.2",
     "winston": "^3.0.0",
     "xmlhttprequest": "^1.8.0"
